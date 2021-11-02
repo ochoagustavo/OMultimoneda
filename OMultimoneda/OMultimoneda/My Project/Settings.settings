@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="userSQL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sa</Value>
+    </Setting>
+    <Setting Name="passSQL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">sa12345</Value>
+    </Setting>
+    <Setting Name="servSQL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SERVIDOR</Value>
+    </Setting>
+    <Setting Name="basedatos" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ENTERPRISEADMINDB</Value>
+    </Setting>
+    <Setting Name="user" Type="System.String" Scope="User">
+      <Value Profile="(Default)">001</Value>
+    </Setting>
+    <Setting Name="pass" Type="System.String" Scope="User">
+      <Value Profile="(Default)">123456</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
