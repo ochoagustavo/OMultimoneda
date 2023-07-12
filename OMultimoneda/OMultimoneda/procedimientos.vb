@@ -6,7 +6,7 @@ Module procedimientos
 
 	Sub productos_precios()
 		Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            EXEC SPOProductos " & factor & "," & cprdiva & "," & cprdcos & ""
+            EXEC SPOProductos " & factor & "," & factor2 & "," & factor3 & "," & cprdiva & "," & cprdcos & ""
 		Dim cmd As New SqlCommand(sql, cn)
 		cmd.CommandTimeout = 300
 		Try
@@ -19,7 +19,7 @@ Module procedimientos
 
 	Sub servicios_precios()
 		Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            EXEC SPOServicios " & factor & "," & csrviva & "," & csrvcos & ""
+            EXEC SPOServicios " & factor & "," & factor2 & "," & factor3 & "," & csrviva & "," & csrvcos & ""
 		Dim cmd As New SqlCommand(sql, cn)
 		cmd.CommandTimeout = 300
 		Try
@@ -34,13 +34,9 @@ Module procedimientos
 	Sub crear_spproductos()
 
 		Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOProductos' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOProductos]')
-			END 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOProductos' AND XTYPE='P')
 			BEGIN
-			EXEC('create PROCEDURE SPOProductos (@factor decimal(28,4),@iva int, @costo int)
+			EXEC('create PROCEDURE SPOProductos (@factor decimal(28,4),@factor2 decimal(28,4),@factor3 decimal(28,4),@iva int, @costo int)
                         AS
                         BEGIN
 	                        declare @montoiva as decimal(28,3)
@@ -50,9 +46,9 @@ Module procedimientos
 	                        begin
 			
 				                        update saprod
-				                        set costact = isnull(b.costoact,0) * @factor ,
-					                        costpro = isnull(b.costopro,0) * @factor ,
-					                        costant = isnull(b.costoant,0) * @factor 
+				                        set costact = iif(b.costoact>0,b.costoact * @factor,a.costact) ,
+					                        costpro = iif(b.costopro>0,b.costopro * @factor2 ,a.costpro),
+					                        costant = iif(b.costoant>0,b.costoant * @factor3 ,a.costant)
 				                        from saprod a
 				                        inner join opreciosmex b
 				                        on a.codprod = b.codprod 
@@ -73,12 +69,12 @@ Module procedimientos
 											set @montoiva  = 1
 
 				                        update saprod
-				                        set precio1 = round(isnull(b.precio1,0) * @factor / @montoiva,@redondeo),
-					                        precio2 = round(isnull(b.precio2,0) * @factor / @montoiva,@redondeo),
-					                        precio3 = round(isnull(b.precio3,0) * @factor / @montoiva,@redondeo),
-					                        preciou = round(isnull(b.preciou1,0) * @factor / @montoiva,@redondeo),
-					                        preciou2 = round(isnull(b.preciou2,0) * @factor / @montoiva,@redondeo),
-					                        preciou3 = round(isnull(b.preciou3,0) * @factor / @montoiva,@redondeo)
+				                        set precio1 = iif(b.precio1>0,round(b.precio1 * @factor / @montoiva,@redondeo),a.precio1),
+											precio2 = iif(b.precio2>0,round(b.precio2 * @factor2 / @montoiva,@redondeo),a.precio2),
+											precio3 = iif(b.precio3>0,round(b.precio3 * @factor3 / @montoiva,@redondeo),a.precio3),
+											preciou = iif(b.preciou1>0,round(b.preciou1 * @factor / @montoiva,@redondeo),a.preciou),
+											preciou2 = iif(b.preciou2>0,round(b.preciou2 * @factor2 / @montoiva,@redondeo),a.preciou2),
+											preciou3 = iif(b.preciou3>0,round(b.preciou3 * @factor3 / @montoiva,@redondeo),a.preciou3)
 				                        from saprod a
 				                        inner join opreciosmex b
 				                        on a.codprod = b.codprod 
@@ -94,12 +90,12 @@ Module procedimientos
 	                        begin
 			
 				                        update saprod
-				                        set precio1 = round(isnull(b.precio1,0) * @factor,@redondeo) ,
-					                        precio2 = round(isnull(b.precio2,0) * @factor,@redondeo) ,
-					                        precio3 = round(isnull(b.precio3,0) * @factor,@redondeo) ,
-					                        preciou = round(isnull(b.preciou1,0) * @factor,@redondeo),
-					                        preciou2 = round(isnull(b.preciou2,0) * @factor,@redondeo),
-					                        preciou3 = round(isnull(b.preciou3,0) * @factor,@redondeo) 
+				                        set precio1 = iif(b.precio1>0,round(b.precio1 * @factor,@redondeo),a.precio1),
+											precio2 = iif(b.precio2>0,round(b.precio2 * @factor2 ,@redondeo),a.precio2),
+											precio3 = iif(b.precio3>0,round(b.precio3 * @factor3 ,@redondeo),a.precio3),
+											preciou = iif(b.preciou1>0,round(b.preciou1 * @factor ,@redondeo),a.preciou),
+											preciou2 = iif(b.preciou2>0,round(b.preciou2 * @factor2,@redondeo),a.preciou2),
+											preciou3 = iif(b.preciou3>0,round(b.preciou3 * @factor3 ,@redondeo),a.preciou3)
 				                        from saprod a
 				                        inner join opreciosmex b
 				                        on a.codprod = b.codprod 
@@ -121,13 +117,9 @@ Module procedimientos
 	Sub crear_spservicios()
 
 		Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOServicios' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOServicios]')
-			END 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOServicios' AND XTYPE='P')
 			BEGIN
-			EXEC('create PROCEDURE SPOServicios (@factor decimal(28,4),@iva int, @costo int)
+			EXEC('create PROCEDURE SPOServicios (@factor decimal(28,4),@factor2 decimal(28,4),@factor3 decimal(28,4),@iva int, @costo int)
                         AS
                         BEGIN
 	                        declare @montoiva as decimal(28,3)
@@ -137,7 +129,7 @@ Module procedimientos
 	                        begin
 			
 				                        update saserv
-				                        set costo = round(isnull(b.costoact,0) * @factor,@redondeo)
+				                        set costo = iif(b.costoact>0,round(b.costoact * @factor,@redondeo),a.costo)
 				                        from saserv a
 				                        inner join opreciosmex b
 				                        on a.codserv = b.codprod 
@@ -157,9 +149,9 @@ Module procedimientos
 											set @montoiva  = 1
 
 				                        update saserv
-				                        set precio1 = round(isnull(b.precio1,0) * @factor / @montoiva,@redondeo),
-					                        precio2 = round(isnull(b.precio2,0) * @factor / @montoiva,@redondeo),
-					                        precio3 = round(isnull(b.precio3,0) * @factor / @montoiva,@redondeo)
+				                        set precio1 = iif(b.precio1>0,round(b.precio1 * @factor / @montoiva,@redondeo),a.precio1),
+					                        precio2 = iif(b.precio2>0,round(b.precio2 * @factor2 / @montoiva,@redondeo),a.precio2),
+					                        precio3 = iif(b.precio3>0,round(b.precio3 * @factor3 / @montoiva,@redondeo),a.precio3)
 					                        
 				                        from saserv a
 				                        inner join opreciosmex b
@@ -177,9 +169,9 @@ Module procedimientos
 	                        begin
 			
 				                        update saserv
-				                        set precio1 = round(isnull(b.precio1,0) * @factor,@redondeo) ,
-					                        precio2 = round(isnull(b.precio2,0) * @factor,@redondeo) ,
-					                        precio3 = round(isnull(b.precio3,0) * @factor,@redondeo)
+				                        set precio1 = iif(b.precio1>0,round(b.precio1 * @factor,@redondeo),a.precio1),
+					                        precio2 = iif(b.precio2>0,round(b.precio2 * @factor2,@redondeo),a.precio2),
+					                        precio3 = iif(b.precio3>0,round(b.precio3 * @factor3,@redondeo),a.precio3)
 					                        
 				                        from saserv a
 				                        inner join opreciosmex b
@@ -205,11 +197,7 @@ Module procedimientos
 	Sub crear_spcompras()
 
         If ccomcos = 1 And ccompre = 1 And cprdiva = 0 Then
-            Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
-			END 
+			Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
 			BEGIN
 			EXEC('create PROCedure [dbo].[SPOCompras] 
@@ -217,7 +205,7 @@ Module procedimientos
                                 @Tipocom as varchar(1),
                                 @Numerod as varchar(20),
                                 @Codprov as varchar(15),
-	                            @Factor as as decimal(28,4)
+	                            @Factor as decimal(28,4)
                         )
                         as
                         Begin
@@ -237,13 +225,15 @@ Module procedimientos
 									end
 				                    
 				                    update opreciosmex
-				                    set costoact = round(isnull(b.costo,0) / @factor,@redondeo),
-										precio1 = round(isnull(b.precio1,0) / @factor,@redondeo),
-					                    precio2 = round(isnull(b.precio2,0) / @factor,@redondeo),
-					                    precio3 = round(isnull(b.precio3,0) / @factor,@redondeo),
-										precioU1 = round(isnull(b.precioU,0) / @factor,@redondeo),
-					                    precioU2 = round(isnull(b.precioU2,0) / @factor,@redondeo),
-					                    precioU3 = round(isnull(b.precioU3,0) / @factor,@redondeo)
+				                    set costoact = round(b.costo / @factor,@redondeo),
+										costopro = round(b.costo / @factor,@redondeo),
+										costoant = round(b.costo / @factor,@redondeo),
+										precio1 = round(b.precio1 / @factor,@redondeo),
+					                    precio2 = round(b.precio2 / @factor,@redondeo),
+					                    precio3 = round(b.precio3 / @factor,@redondeo),
+										precioU1 = round(b.precioU / @factor,@redondeo),
+					                    precioU2 = round(b.precioU2 / @factor,@redondeo),
+					                    precioU3 = round(b.precioU3 / @factor,@redondeo)
 					                from opreciosmex a
 									inner join saitemcom b
 									on a.codprod = b.coditem
@@ -258,7 +248,7 @@ Module procedimientos
 							END	    
                         end')		
 			END"
-            Dim cmd As New SqlCommand(sql, cn)
+			Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandTimeout = 300
             Try
                 cmd.ExecuteNonQuery()
@@ -269,11 +259,7 @@ Module procedimientos
         End If
 
         If ccomcos = 1 And ccompre = 1 And cprdiva = 1 Then
-            Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
-			END 
+			Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
 			BEGIN
 			EXEC('create PROCedure [dbo].[SPOCompras] 
@@ -309,13 +295,15 @@ Module procedimientos
 									set @montoiva  = 1
 				                    
 				                    update opreciosmex
-				                    set costoact = round(isnull(b.costo,0) / @factor,@redondeo),
-										precio1 = round(isnull(b.precio1,0) / @factor* @montoiva,@redondeo),
-					                    precio2 = round(isnull(b.precio2,0) / @factor* @montoiva,@redondeo),
-					                    precio3 = round(isnull(b.precio3,0) / @factor* @montoiva,@redondeo),
-										precioU1 = round(isnull(b.precioU,0) / @factor* @montoiva,@redondeo),
-					                    precioU2 = round(isnull(b.precioU2,0)/ @factor* @montoiva,@redondeo),
-					                    precioU3 = round(isnull(b.precioU3,0) / @factor* @montoiva,@redondeo)
+				                    set costoact = round(b.costo / @factor,@redondeo),
+										costopro = round(b.costo / @factor,@redondeo),
+										costoant = round(b.costo / @factor,@redondeo),
+										precio1 = round(b.precio1*@montoiva / @factor,@redondeo),
+					                    precio2 = round(b.precio2*@montoiva / @factor,@redondeo),
+					                    precio3 = round(b.precio3*@montoiva / @factor,@redondeo),
+										precioU1 = round(b.precioU*@montoiva / @factor,@redondeo),
+					                    precioU2 = round(b.precioU2*@montoiva / @factor,@redondeo),
+					                    precioU3 = round(b.precioU3*@montoiva / @factor,@redondeo)
 					                from opreciosmex a
 									inner join saitemcom b
 									on a.codprod = b.coditem
@@ -330,7 +318,7 @@ Module procedimientos
 							END	    
                         end')		
 		    END"
-            Dim cmd As New SqlCommand(sql, cn)
+			Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandTimeout = 300
             Try
                 cmd.ExecuteNonQuery()
@@ -341,11 +329,7 @@ Module procedimientos
         End If
 
         If ccomcos = 1 And ccompre = 0 Then
-            Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
-			END 
+			Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
 			BEGIN
 			EXEC('create PROCedure [dbo].[SPOCompras] 
@@ -353,7 +337,7 @@ Module procedimientos
                                 @Tipocom as varchar(1),
                                 @Numerod as varchar(20),
                                 @Codprov as varchar(15),
-	                            @Factor as as decimal(28,4)
+	                            @Factor as decimal(28,4)
                         )
                         as
                         Begin
@@ -373,7 +357,9 @@ Module procedimientos
 									end
 				                    
 				                    update opreciosmex
-				                    set costoact = round(isnull(b.costo,0) / @factor,@redondeo)
+				                    set costoact = round(b.costo / @factor,@redondeo),
+										costopro = round(b.costo / @factor,@redondeo),
+										costoant = round(b.costo / @factor,@redondeo)
 					                from opreciosmex a
 									inner join saitemcom b
 									on a.codprod = b.coditem
@@ -388,7 +374,7 @@ Module procedimientos
 							END	    
                         end')			
 		    END"
-            Dim cmd As New SqlCommand(sql, cn)
+			Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandTimeout = 300
             Try
                 cmd.ExecuteNonQuery()
@@ -398,11 +384,7 @@ Module procedimientos
         End If
 
         If ccompre = 1 And ccomcos = 0 And cprdiva = 0 Then
-            Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
-			END 
+			Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
 			BEGIN
 			EXEC('create PROCedure [dbo].[SPOCompras] 
@@ -410,7 +392,7 @@ Module procedimientos
                                 @Tipocom as varchar(1),
                                 @Numerod as varchar(20),
                                 @Codprov as varchar(15),
-	                            @Factor as as decimal(28,4)
+	                            @Factor as decimal(28,4)
                         )
                         as
                         Begin
@@ -431,12 +413,12 @@ Module procedimientos
 				                    
 				                    update opreciosmex
 				                    set 
-										precio1 = round(isnull(b.precio1,0) / @factor,@redondeo),
-					                    precio2 = round(isnull(b.precio2,0) / @factor,@redondeo),
-					                    precio3 = round(isnull(b.precio3,0) / @factor,@redondeo),
-										precioU1 = round(isnull(b.precioU,0) / @factor,@redondeo),
-					                    precioU2 = round(isnull(b.precioU2,0) / @factor,@redondeo),
-					                    precioU3 = round(isnull(b.precioU3,0) / @factor,@redondeo)
+										precio1 = round(b.precio1 / @factor,@redondeo),
+					                    precio2 = round(b.precio2 / @factor,@redondeo),
+					                    precio3 = round(b.precio3 / @factor,@redondeo),
+										precioU1 = round(b.precioU / @factor,@redondeo),
+					                    precioU2 = round(b.precioU2 / @factor,@redondeo),
+					                    precioU3 = round(b.precioU3 / @factor,@redondeo)
 					                from opreciosmex a
 									inner join saitemcom b
 									on a.codprod = b.coditem
@@ -451,7 +433,7 @@ Module procedimientos
 							END	    
                         end')			
 		    END"
-            Dim cmd As New SqlCommand(sql, cn)
+			Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandTimeout = 300
             Try
                 cmd.ExecuteNonQuery()
@@ -461,11 +443,7 @@ Module procedimientos
         End If
 
         If ccompre = 1 And ccomcos = 0 And cprdiva = 1 Then
-            Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
-			END 
+			Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
 			BEGIN
 			EXEC('create PROCedure [dbo].[SPOCompras] 
@@ -502,12 +480,12 @@ Module procedimientos
 				                    
 				                    update opreciosmex
 				                    set 
-										precio1 = round(isnull(b.precio1,0) / @factor* @montoiva,@redondeo),
-					                    precio2 = round(isnull(b.precio2,0) / @factor* @montoiva,@redondeo),
-					                    precio3 = round(isnull(b.precio3,0) / @factor* @montoiva,@redondeo),
-										precioU1 = round(isnull(b.precioU,0) / @factor* @montoiva,@redondeo),
-					                    precioU2 = round(isnull(b.precioU2,0)/ @factor* @montoiva,@redondeo),
-					                    precioU3 = round(isnull(b.precioU3,0) / @factor* @montoiva,@redondeo)
+										precio1 = round(b.precio1*@montoiva / @factor,@redondeo),
+					                    precio2 = round(b.precio2*@montoiva / @factor,@redondeo),
+					                    precio3 = round(b.precio3*@montoiva / @factor,@redondeo),
+										precioU1 = round(b.precioU*@montoiva / @factor,@redondeo),
+					                    precioU2 = round(b.precioU2*@montoiva / @factor,@redondeo),
+					                    precioU3 = round(b.precioU3*@montoiva / @factor,@redondeo)
 					                from opreciosmex a
 									inner join saitemcom b
 									on a.codprod = b.coditem
@@ -522,7 +500,7 @@ Module procedimientos
 							END	    
                         end')		
 		    END"
-            Dim cmd As New SqlCommand(sql, cn)
+			Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandTimeout = 300
             Try
                 cmd.ExecuteNonQuery()

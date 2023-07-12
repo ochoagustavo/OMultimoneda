@@ -11,7 +11,7 @@ Public Class LoginForm1
         Dim vs As New VerificarSerial
         Dim SerialGenerado As String
         Dim SerialGuardado As String
-        Dim serialsaint As String
+        Dim serialsaint As String = ""
 
 
 
@@ -136,8 +136,43 @@ Public Class LoginForm1
 
     End Sub
 
-    Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Closed
-
+    Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
+
+    Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
+        abrirconex()
+
+        Try
+
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; SELECT 
+                              CODUSUA,
+                              DESCRIP,
+                              replace (
+	                          CAST(SUBSTRING(SDATA3,175,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA1,33,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA2,90,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA3,14,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA1,207,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA3,111,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA3,145,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA2,180,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA2,9,1) AS VARCHAR)+
+                              CAST(SUBSTRING(SDATA3,53,1) AS VARCHAR),
+		                        ' ','') AS CLAVE
+	                        FROM SSUSRS where codusua = '" & UsernameTextBox.Text & "'", cn)
+            descripcion = empresas.ExecuteReader
+
+            While descripcion.Read()
+                My.Settings.user = descripcion.Item("codusua")
+                My.Settings.pass = descripcion.Item("clave")
+
+            End While
+            descripcion.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+
 End Class

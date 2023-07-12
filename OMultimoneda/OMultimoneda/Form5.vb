@@ -20,6 +20,10 @@ Public Class Form5
     End Sub
 
     Private Sub Form5_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim r As New Globalization.CultureInfo("es-ES")
+        r.NumberFormat.CurrencyDecimalSeparator = "."
+        r.NumberFormat.NumberDecimalSeparator = "."
+        System.Threading.Thread.CurrentThread.CurrentCulture = r
 
         abrirconex()
 
@@ -29,7 +33,7 @@ Public Class Form5
             descripcion = empresas.ExecuteReader
             While descripcion.Read()
                 factor = descripcion.Item("factor")
-                TextBox1.Text = Replace(factor, ",", ".")
+                TextBox1.Text = FormatNumber(factor, decimales)
             End While
             descripcion.Close()
         Catch ex As Exception

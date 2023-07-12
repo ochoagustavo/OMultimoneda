@@ -31,7 +31,6 @@ C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\De
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.Form3.resources
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.Form5.resources
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.LoginForm1.resources
-C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.Form4.resources
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.Resources.resources
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.vbproj.GenerateResource.cache
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.vbproj.CoreCompileInputs.cache
@@ -40,3 +39,6 @@ C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\De
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.exe
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.xml
 C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.pdb
+C:\Users\Gustavo\Source\Repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.Form4.resources
+C:\Users\Gustavo\source\repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.vbproj.SuggestedBindingRedirects.cache
+C:\Users\Gustavo\source\repos\ochoagustavo\odos\OMultimoneda\OMultimoneda\obj\Debug\OMultimoneda.Form6.resources

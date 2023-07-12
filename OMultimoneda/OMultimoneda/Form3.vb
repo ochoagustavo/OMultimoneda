@@ -108,8 +108,10 @@ Public Class Form3
         End If
 
         If cactcom = 1 Then
+
+            actcom()
             crear_spcompras()
-            crear_trcompras()
+
 
         End If
 

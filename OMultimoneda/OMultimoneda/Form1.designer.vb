@@ -27,14 +27,22 @@ Partial Class Form1
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.txtFactorm = New System.Windows.Forms.TextBox()
+        Me.txtFactor1 = New System.Windows.Forms.TextBox()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ConfiguracionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GeneralToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HerramientasToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImportarPreciosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AjusteManualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AjusteAutomaticoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtFactor2 = New System.Windows.Forms.TextBox()
+        Me.txtFactor3 = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -42,23 +50,29 @@ Partial Class Form1
         'Button2
         '
         Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(190, 48)
+        Me.Button2.Location = New System.Drawing.Point(257, 53)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(89, 77)
-        Me.Button2.TabIndex = 1
+        Me.Button2.TabIndex = 6
         Me.Button2.Text = "Procesar"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.Label6)
+        Me.GroupBox1.Controls.Add(Me.Label5)
+        Me.GroupBox1.Controls.Add(Me.Label4)
+        Me.GroupBox1.Controls.Add(Me.Label3)
+        Me.GroupBox1.Controls.Add(Me.txtFactor3)
+        Me.GroupBox1.Controls.Add(Me.txtFactor2)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Controls.Add(Me.TextBox2)
-        Me.GroupBox1.Controls.Add(Me.TextBox1)
+        Me.GroupBox1.Controls.Add(Me.txtFactorm)
+        Me.GroupBox1.Controls.Add(Me.txtFactor1)
         Me.GroupBox1.Controls.Add(Me.Button2)
         Me.GroupBox1.Location = New System.Drawing.Point(12, 27)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(315, 135)
+        Me.GroupBox1.Size = New System.Drawing.Size(352, 196)
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Ingrese factor de cambio"
@@ -66,7 +80,7 @@ Partial Class Form1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(23, 79)
+        Me.Label2.Location = New System.Drawing.Point(9, 138)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(124, 13)
         Me.Label2.TabIndex = 6
@@ -75,33 +89,33 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(23, 29)
+        Me.Label1.Location = New System.Drawing.Point(9, 23)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(185, 13)
         Me.Label1.TabIndex = 5
         Me.Label1.Text = "Factor de cambio productos/servicios"
         '
-        'TextBox2
+        'txtFactorm
         '
-        Me.TextBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox2.Location = New System.Drawing.Point(26, 99)
-        Me.TextBox2.MaxLength = 40
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(158, 26)
-        Me.TextBox2.TabIndex = 4
+        Me.txtFactorm.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFactorm.Location = New System.Drawing.Point(82, 159)
+        Me.txtFactorm.MaxLength = 40
+        Me.txtFactorm.Name = "txtFactorm"
+        Me.txtFactorm.Size = New System.Drawing.Size(158, 26)
+        Me.txtFactorm.TabIndex = 5
         '
-        'TextBox1
+        'txtFactor1
         '
-        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(26, 48)
-        Me.TextBox1.MaxLength = 40
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(158, 26)
-        Me.TextBox1.TabIndex = 2
+        Me.txtFactor1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFactor1.Location = New System.Drawing.Point(82, 45)
+        Me.txtFactor1.MaxLength = 40
+        Me.txtFactor1.Name = "txtFactor1"
+        Me.txtFactor1.Size = New System.Drawing.Size(158, 26)
+        Me.txtFactor1.TabIndex = 2
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(252, 168)
+        Me.Button3.Location = New System.Drawing.Point(289, 229)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 3
@@ -113,7 +127,7 @@ Partial Class Form1
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfiguracionToolStripMenuItem, Me.HerramientasToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(339, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(376, 24)
         Me.MenuStrip1.TabIndex = 4
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -127,12 +141,12 @@ Partial Class Form1
         'GeneralToolStripMenuItem
         '
         Me.GeneralToolStripMenuItem.Name = "GeneralToolStripMenuItem"
-        Me.GeneralToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.GeneralToolStripMenuItem.Size = New System.Drawing.Size(114, 22)
         Me.GeneralToolStripMenuItem.Text = "General"
         '
         'HerramientasToolStripMenuItem
         '
-        Me.HerramientasToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportarPreciosToolStripMenuItem})
+        Me.HerramientasToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImportarPreciosToolStripMenuItem, Me.AjusteManualToolStripMenuItem, Me.AjusteAutomaticoToolStripMenuItem})
         Me.HerramientasToolStripMenuItem.Name = "HerramientasToolStripMenuItem"
         Me.HerramientasToolStripMenuItem.Size = New System.Drawing.Size(90, 20)
         Me.HerramientasToolStripMenuItem.Text = "Herramientas"
@@ -140,14 +154,82 @@ Partial Class Form1
         'ImportarPreciosToolStripMenuItem
         '
         Me.ImportarPreciosToolStripMenuItem.Name = "ImportarPreciosToolStripMenuItem"
-        Me.ImportarPreciosToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ImportarPreciosToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ImportarPreciosToolStripMenuItem.Text = "Importar precios"
+        '
+        'AjusteManualToolStripMenuItem
+        '
+        Me.AjusteManualToolStripMenuItem.Name = "AjusteManualToolStripMenuItem"
+        Me.AjusteManualToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.AjusteManualToolStripMenuItem.Text = "Ajuste Manual"
+        '
+        'AjusteAutomaticoToolStripMenuItem
+        '
+        Me.AjusteAutomaticoToolStripMenuItem.Name = "AjusteAutomaticoToolStripMenuItem"
+        Me.AjusteAutomaticoToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.AjusteAutomaticoToolStripMenuItem.Text = "Ajuste Automatico"
+        '
+        'txtFactor2
+        '
+        Me.txtFactor2.Enabled = False
+        Me.txtFactor2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFactor2.Location = New System.Drawing.Point(82, 77)
+        Me.txtFactor2.MaxLength = 40
+        Me.txtFactor2.Name = "txtFactor2"
+        Me.txtFactor2.Size = New System.Drawing.Size(158, 26)
+        Me.txtFactor2.TabIndex = 3
+        '
+        'txtFactor3
+        '
+        Me.txtFactor3.Enabled = False
+        Me.txtFactor3.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFactor3.Location = New System.Drawing.Point(82, 109)
+        Me.txtFactor3.MaxLength = 40
+        Me.txtFactor3.Name = "txtFactor3"
+        Me.txtFactor3.Size = New System.Drawing.Size(158, 26)
+        Me.txtFactor3.TabIndex = 4
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(9, 53)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(43, 13)
+        Me.Label3.TabIndex = 7
+        Me.Label3.Text = "Precio1"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(9, 85)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(43, 13)
+        Me.Label4.TabIndex = 8
+        Me.Label4.Text = "Precio2"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(9, 117)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(43, 13)
+        Me.Label5.TabIndex = 9
+        Me.Label5.Text = "Precio3"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(9, 167)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(37, 13)
+        Me.Label6.TabIndex = 10
+        Me.Label6.Text = "Factor"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(339, 210)
+        Me.ClientSize = New System.Drawing.Size(376, 271)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.MenuStrip1)
@@ -173,8 +255,16 @@ Partial Class Form1
     Friend WithEvents GeneralToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents TextBox2 As TextBox
-    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents txtFactorm As TextBox
+    Friend WithEvents txtFactor1 As TextBox
     Friend WithEvents HerramientasToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ImportarPreciosToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AjusteManualToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AjusteAutomaticoToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Label6 As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents txtFactor3 As TextBox
+    Friend WithEvents txtFactor2 As TextBox
 End Class

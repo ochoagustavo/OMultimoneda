@@ -12,9 +12,14 @@ Module conexion
     Public tablasrv As String
     Public activosrv As Integer
     Public indsrv As Integer
+    Public tablacom As String
+    Public activocom As Integer
+    Public indcom As Integer
 
-    Public factor As String
-    Public factorm As String
+    Public factor As Decimal
+    Public factor2 As Decimal
+    Public factor3 As Decimal
+    Public factorm As Decimal
 
     Public cactprd As Integer
     Public cactsrv As Integer
@@ -29,23 +34,39 @@ Module conexion
     Public ccomcos As Integer
     Public decimales As Integer = 2
 
+    Sub abrirconex()
+        cn = New SqlConnection
+        cadena = "Data Source=" & My.Settings.servSQL & ";Initial Catalog=" & My.Settings.basedatos & ";Persist Security Info=True;User ID=" & My.Settings.userSQL & ";Password=" & My.Settings.passSQL & ";MultipleActiveResultSets=True"
+        cn.ConnectionString = cadena
+        If cn.State = 1 Then
+            cn.Close()
+        Else
+            Try
+                cn.Open()
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
+
+    End Sub
+
     Sub tabla_configuracion()
         Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='OMConf' AND XTYPE='U')
             BEGIN
             EXEC('CREATE TABLE [dbo].[OMConf](
 	            [id] [int] IDENTITY(1,1) NOT NULL,
-	            [actprd] [int] NOT NULL,
-	            [actsrv] [int] NOT NULL,
-				[actcom] [int] NOT NULL,
-	            [prdpre] [int] NOT NULL,
-	            [srvpre] [int] NOT NULL,
-				[compre] [int] NOT NULL,
-	            [prdcos] [int] NOT NULL,
-	            [srvcos] [int] NOT NULL,
-				[comcos] [int] NOT NULL,
-	            [prdiva] [int] NOT NULL,
-	            [srviva] [int] NOT NULL
+	            [actprd] [int] NOT NULL DEFAULT(0),
+	            [actsrv] [int] NOT NULL DEFAULT(0),
+				[actcom] [int] NOT NULL DEFAULT(0),
+	            [prdpre] [int] NOT NULL DEFAULT(0),
+	            [srvpre] [int] NOT NULL DEFAULT(0),
+				[compre] [int] NOT NULL DEFAULT(0),
+	            [prdcos] [int] NOT NULL DEFAULT(0),
+	            [srvcos] [int] NOT NULL DEFAULT(0),
+				[comcos] [int] NOT NULL DEFAULT(0),
+	            [prdiva] [int] NOT NULL DEFAULT(0),
+	            [srviva] [int] NOT NULL DEFAULT(0)
             ) ON [PRIMARY]')
             END
             
@@ -100,7 +121,7 @@ Module conexion
     End Sub
     Sub leer_configuracion()
         Try
-            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
             select actprd, actsrv, actcom, prdpre, srvpre, prdcos, srvcos, prdiva, srviva, comcos, compre from omconf", cn)
             descripcion = empresas.ExecuteReader
             While descripcion.Read()
@@ -122,7 +143,7 @@ Module conexion
         End Try
 
         Try
-            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
             select dbo.fnomredondeo() as redondeo from omconf", cn)
             descripcion = empresas.ExecuteReader
             While descripcion.Read()
@@ -134,7 +155,7 @@ Module conexion
         End Try
 
         Try
-            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
             select factor, factorm from saconf", cn)
             descripcion = empresas.ExecuteReader
             While descripcion.Read()
@@ -148,6 +169,8 @@ Module conexion
 
 
     End Sub
+
+
 
     Sub act_configuracion()
         Dim sql As String = "use [" & My.Settings.basedatos & "]; 
@@ -177,22 +200,33 @@ Module conexion
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='OPreciosMex' AND XTYPE='U')
             BEGIN
             EXEC('CREATE TABLE [dbo].[OPreciosMex](
-	                [CodProd] [varchar](15) NULL,
-	                [CostoAct] [decimal](28, 4) NULL,
-	                [CostoAnt] [decimal](28, 4) NULL,
-	                [CostoPro] [decimal](28, 4) NULL,
-	                [Precio1] [decimal](28, 4) NULL,
-	                [Precio2] [decimal](28, 4) NULL,
-	                [Precio3] [decimal](28, 4) NULL,
-                    [PrecioU1] [decimal](28, 4) NULL,
-	                [PrecioU2] [decimal](28, 4) NULL,
-	                [PrecioU3] [decimal](28, 4) NULL)')		
+	                [CodProd] [varchar](15) NOT NULL,
+	                [CostoAct] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [CostoAnt] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [CostoPro] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [Precio1] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [Precio2] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [Precio3] [decimal](28, 4) NOT NULL DEFAULT(0),
+                    [PrecioU1] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [PrecioU2] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [PrecioU3] [decimal](28, 4) NOT NULL DEFAULT(0),
+                    [Util1] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [Util2] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [Util3] [decimal](28, 4) NOT NULL DEFAULT(0),
+                    [UtilU1] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [UtilU2] [decimal](28, 4) NOT NULL DEFAULT(0),
+	                [UtilU3] [decimal](28, 4) NOT NULL DEFAULT(0))')		
             END
             
 
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE (COLUMN_NAME = 'PrecioU1' OR COLUMN_NAME = 'PrecioU2' OR COLUMN_NAME = 'PrecioU3') AND TABLE_NAME = 'OPreciosMex')
             BEGIN
-	            EXEC('ALTER TABLE Opreciosmex ADD PrecioU1 decimal(28,4), PrecioU2 decimal(28,4), PrecioU3 decimal(28,4)')
+	            EXEC('ALTER TABLE Opreciosmex ADD PrecioU1 decimal(28,4) NOT NULL DEFAULT(0), PrecioU2 decimal(28,4) NOT NULL DEFAULT(0), PrecioU3 decimal(28,4) NOT NULL DEFAULT(0)')
+	        END
+
+            IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE (COLUMN_NAME = 'Util1' OR COLUMN_NAME = 'Util2' OR COLUMN_NAME = 'Util3') AND TABLE_NAME = 'OPreciosMex')
+            BEGIN
+	            EXEC('ALTER TABLE Opreciosmex ADD Util1 decimal(28,4) NOT NULL DEFAULT(0), Util2 decimal(28,4) NOT NULL DEFAULT(0), Util3 decimal(28,4) NOT NULL DEFAULT(0), UtilU1 decimal(28,4) NOT NULL DEFAULT(0), UtilU2 decimal(28,4) NOT NULL DEFAULT(0), UtilU3 decimal(28,4) NOT NULL DEFAULT(0)')
 	        END
             "
         Dim cmd As New SqlCommand(sql, cn)
@@ -204,15 +238,16 @@ Module conexion
         End Try
     End Sub
 
+
     Sub refrescartabla()
         Dim sql As String = "use [" & My.Settings.basedatos & "]; 
             IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='OPreciosMex' AND XTYPE='U')
             BEGIN
-            EXEC('INSERT INTO OPRECIOSMEX (CODPROD,COSTOACT,COSTOANT,COSTOPRO,PRECIO1,PRECIO2,PRECIO3,PRECIOU1,PRECIOU2,PRECIOU3)
-            SELECT CODPROD,0,0,0,0,0,0,0,0,0 FROM SAPROD where saprod.codprod not in (select codprod from opreciosmex)')
+            EXEC('INSERT INTO OPRECIOSMEX (CODPROD,COSTOACT,COSTOANT,COSTOPRO,PRECIO1,PRECIO2,PRECIO3,PRECIOU1,PRECIOU2,PRECIOU3,UTIL1,UTIL2,UTIL3,UTILU1,UTILU2,UTILU3)
+            SELECT CODPROD,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 FROM SAPROD where saprod.codprod not in (select codprod from opreciosmex)')
 
-            EXEC('INSERT INTO OPRECIOSMEX (CODPROD,COSTOACT,COSTOANT,COSTOPRO,PRECIO1,PRECIO2,PRECIO3)
-            SELECT CODSERV,0,0,0,0,0,0 FROM SASERV where saserv.codserv not in (select codprod from opreciosmex)')
+            EXEC('INSERT INTO OPRECIOSMEX (CODPROD,COSTOACT,COSTOANT,COSTOPRO,PRECIO1,PRECIO2,PRECIO3,UTIL1,UTIL2,UTIL3,UTILU1,UTILU2,UTILU3)
+            SELECT CODSERV,0,0,0,0,0,0,0,0,0,0,0,0 FROM SASERV where saserv.codserv not in (select codprod from opreciosmex)')
             END"
         Dim cmd As New SqlCommand(sql, cn)
         cmd.CommandTimeout = 300
@@ -223,26 +258,12 @@ Module conexion
         End Try
     End Sub
 
-    Sub abrirconex()
-        cn = New SqlConnection
-        cadena = "Data Source=" & My.Settings.servSQL & ";Initial Catalog=" & My.Settings.basedatos & ";Persist Security Info=True;User ID=" & My.Settings.userSQL & ";Password=" & My.Settings.passSQL & ";MultipleActiveResultSets=True"
-        cn.ConnectionString = cadena
-        If cn.State = 1 Then
-            cn.Close()
-        Else
-            Try
-                cn.Open()
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
-        End If
 
-    End Sub
 
     Sub actprd()
 
         Try
-            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
             select isnull((select max(NumGrp) maxi from SAAGRUPOS 
                     where CodTbl = 'SAPROD' and NombreGrp = 'OMultimoneda'),0) as ActivoPrd", cn)
             descripcion = empresas.ExecuteReader
@@ -256,7 +277,7 @@ Module conexion
 
         If activoprd = 0 Then
             Try
-                empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+                empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
                 select isnull((select max(NumGrp) MaxNumGrp from SAAGRUPOS 
                         where CodTbl = 'SAPROD'),0)+1 as IndPrd", cn)
                 descripcion = empresas.ExecuteReader
@@ -338,7 +359,7 @@ Module conexion
 
     Sub actsrv()
         Try
-            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
             select isnull((select max(NumGrp) maxi from SAAGRUPOS 
                     where CodTbl = 'SASERV' and NombreGrp = 'OMultimoneda'),0) as ActivoSrv", cn)
             descripcion = empresas.ExecuteReader
@@ -352,7 +373,7 @@ Module conexion
 
         If activosrv = 0 Then
             Try
-                empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+                empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
                 select isnull((select max(NumGrp) MaxNumGrp from SAAGRUPOS 
                         where CodTbl = 'SASERV'),0)+1 as IndSrv", cn)
                 descripcion = empresas.ExecuteReader
@@ -425,7 +446,7 @@ Module conexion
 
     Sub desprd()
         Try
-            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
             select isnull((select max(NumGrp) maxi from SAAGRUPOS 
                     where CodTbl = 'SAPROD' and NombreGrp = 'OMultimoneda'),0) as ActivoPrd", cn)
             descripcion = empresas.ExecuteReader
@@ -497,21 +518,90 @@ Module conexion
         End If
     End Sub
 
-    Sub crear_trcompras()
+    Sub actcom()
 
-        Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME = 'EsMoneda' AND TABLE_NAME = 'SAPROV')
-            BEGIN
-                    EXEC('update SAPROV set EsMoneda = 1')
-            END
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='trOPreciosCompras' AND XTYPE='TR')
-            BEGIN
-			EXEC('DROP TRIGGER [dbo].[trOPreciosCompras]')
-			END 
+
+        Try
+            empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
+            select isnull((select max(NumGrp) maxi from SAAGRUPOS 
+                    where CodTbl = 'SACOMP' and NombreGrp = 'OMultimoneda'),0) as ActivoCom", cn)
+            descripcion = empresas.ExecuteReader
+            While descripcion.Read()
+                activocom = descripcion.Item("ActivoCom")
+            End While
+            descripcion.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        If activocom = 0 Then
+            Try
+                empresas = New SqlCommand("use [" & My.Settings.basedatos & "]; 
+                select isnull((select max(NumGrp) MaxNumGrp from SAAGRUPOS 
+                        where CodTbl = 'SACOMP'),0)+1 as IndCom", cn)
+                descripcion = empresas.ExecuteReader
+                While descripcion.Read()
+                    indcom = descripcion.Item("IndCom")
+                End While
+                descripcion.Close()
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
+
+        If indcom = 0 Then
+
+        Else
+            Try
+                Dim sql As String = "use [" & My.Settings.basedatos & "]; 
+            declare @gmax int = " & indcom & "
+            INSERT SAAGRUPOS  
+	        (CodTbl,NumGrp,NombreGrp,AliasGrp,EsTrans,NMeses,NMovim) 
+	        values('SACOMP',@Gmax,'OMultimoneda','OMultimoneda',0,0,0)
+            
+            DELETE FROM SAACAMPOS WHERE CODTBL = 'SACOMP' AND NUMGRP = @GMAX
+	        INSERT SAACAMPOS (CodTbl,NumGrp,NombCpo,AliasCpo,TipoCpo,Longitud,Requerido,CBusqueda) 
+	        VALUES ('SACOMP',@Gmax,'Factor','Factor',106,35,1,0)
+	        Insert into SAAOPER (CodTbl,NumGrp,NroOper,PDtaReq) 
+	        Values('SACOMP',@Gmax,340,0)
+            Insert into SAAOPER (CodTbl,NumGrp,NroOper,PDtaReq) 
+	        Values('SACOMP',@Gmax,342,0)
+            "
+                Dim cmd As New SqlCommand(sql, cn)
+                cmd.ExecuteNonQuery()
+
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+
+            Try
+                tablacom = "SACOMP_" & Format(indcom, "00")
+                Dim sql As String = "use [" & My.Settings.basedatos & "]; 
+                IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='" & tablacom & "' AND XTYPE='U')
+                BEGIN
+                EXEC('CREATE TABLE [dbo].[" & tablacom & "](
+	                [CodSucu] [varchar](5),
+	                [TipoCom] [varchar](1),
+	                [NumeroD] [varchar](30),
+	                [CodProv] [varchar](30),
+	                [Factor] [decimal](28, 4))')		
+                END
+                "
+                Dim cmd As New SqlCommand(sql, cn)
+                cmd.CommandTimeout = 300
+                cmd.ExecuteNonQuery()
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
+
+        Try
+            tablacom = "SACOMP_" & Format(indcom, "00")
+            Dim sql As String = "use [" & My.Settings.basedatos & "];  
             IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='trOPreciosCompras' AND XTYPE='TR')
 			BEGIN
 			EXEC('CREATE TRIGGER [dbo].[trOPrecioscompras]
-	                ON [dbo].[SACOMP]
+	                ON [dbo].[" & tablacom & "]
 	                AFTER INSERT
                 AS
                 BEGIN
@@ -526,40 +616,95 @@ Module conexion
                     
                     IF @TipoCom in (''H'',''J'')
                     BEGIN
-					    EXEC SPOCompras @TIPOCOM, @NUMEROD, @CODPROV, @FACTOR
+                        EXEC SPOCompras @TIPOCOM, @NUMEROD, @CODPROV, @FACTOR
+                    END
+				END')		
+		    END
+            IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='trOPreciosItem' AND XTYPE='TR')
+			BEGIN
+			EXEC('CREATE TRIGGER [dbo].[trOPreciosItem]
+	                ON [dbo].[SAITEMCOM]
+	                AFTER INSERT
+                AS
+                BEGIN
+                DECLARE
+	                @tipocom VARCHAR(1),
+	                @coditem VARCHAR(15),
+                    @costo decimal(28,4),
+                    @precio1 decimal(28,4),
+                    @precio2 decimal(28,4),
+                    @precio3 decimal(28,4),
+                    @precioU decimal(28,4),
+                    @precioU2 decimal(28,4),
+                    @precioU3 decimal(28,4)
+
+	                SELECT @coditem = coditem, @costo = costo, @precio1 = precio1, @precio2 = precio2, @precio3 = precio3, @precioU = precioU, @precioU2 = precioU2, @precioU3 = precioU3  FROM inserted
+                    
+                    IF @TipoCom in (''H'',''J'')
+                    BEGIN
+                        update saprod
+                        set costact = @costo, costpro = @costo, precio1 = @precio1, precio2 = @precio2, precio3 = @precio3, preciou = @preciou, preciou2 = @preciou2, preciou3 = @preciou3
+                        where codprod = @coditem
                     END
 				END')		
 		    END"
-        Dim cmd As New SqlCommand(sql, cn)
+            Dim cmd As New SqlCommand(sql, cn)
+            cmd.CommandTimeout = 300
+
+            cmd.ExecuteNonQuery()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            End Try
+
+
+    End Sub
+
+
+
+    Sub des_compras()
+        Try
+            empresas = New SqlCommand("use " & My.Settings.basedatos & "; 
+            select isnull((select max(NumGrp) maxi from SAAGRUPOS 
+                    where CodTbl = 'SACOMP' and NombreGrp = 'OMultimoneda'),0) as ActivoCom", cn)
+            descripcion = empresas.ExecuteReader
+            While descripcion.Read()
+                activocom = descripcion.Item("ActivoCom")
+            End While
+            descripcion.Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+        If activocom = 0 Then
+        Else
+
+            Dim sql As String = "use [" & My.Settings.basedatos & "]; 
+            declare @NumGrp int = " & activocom & "
+            delete SAAGRUPOS  where CodTbl = 'SACOMP' and NumGrp = @NumGrp
+            delete SAAOPER	  where CodTbl = 'SACOMP' and NumGrp = @NumGrp
+            delete SAACAMPOS  where CodTbl = 'SACOMP' and NumGrp = @NumGrp
+
+            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='trOPreciosCompras' AND XTYPE='TR')
+            BEGIN
+			EXEC('DROP TRIGGER [dbo].[trOprecioscompras]')
+            END
+            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='trOPreciosItem' AND XTYPE='TR')
+            BEGIN
+			EXEC('DROP TRIGGER [dbo].[trOpreciosItem]')
+            END
+            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
+            BEGIN
+			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
+            END"
+            Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandTimeout = 300
             Try
                 cmd.ExecuteNonQuery()
             Catch ex As Exception
                 MsgBox(ex.Message)
             End Try
+        End If
 
-
-
-    End Sub
-
-    Sub des_compras()
-
-        Dim sql As String = "use [" & My.Settings.basedatos & "]; 
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='trOPreciosCompras' AND XTYPE='TR')
-            BEGIN
-			EXEC('DROP TRIGGER [dbo].[trOprecioscompras]')
-            END
-            IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME='SPOCompras' AND XTYPE='P')
-            BEGIN
-			EXEC('DROP PROCEDURE [dbo].[SPOCompras]')
-            END"
-        Dim cmd As New SqlCommand(sql, cn)
-        cmd.CommandTimeout = 300
-        Try
-            cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
 
     End Sub
 
